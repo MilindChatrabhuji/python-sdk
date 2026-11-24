@@ -15,6 +15,7 @@ from mcp_types import (
     CLIENT_INFO_META_KEY,
     PROTOCOL_VERSION_META_KEY,
     SERVER_INFO_META_KEY,
+    JSONRPCError,
     JSONRPCMessage,
     JSONRPCRequest,
     JSONRPCResponse,
@@ -126,6 +127,7 @@ async def test_stdio_server_invalid_json_emits_parse_error() -> None:
     assert len(output_lines) == 1
 
     error_resp = jsonrpc_message_adapter.validate_json(output_lines[0].strip())
+    assert isinstance(error_resp, JSONRPCError)
     assert error_resp.id == 3
     assert error_resp.error.code == -32700
     assert "Parse error" in error_resp.error.message
